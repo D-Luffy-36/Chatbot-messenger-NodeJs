@@ -35,25 +35,42 @@ const getWebhook = async (req, res) => {
     }
 
 }
-
 const postWebhook = async (req, res) => {
     let body = req.body;
 
-    console.log(`\u{1F7EA} Received webhook:`);
-    console.dir(body, { depth: null });
-    // Send a 200 OK response if this is a page webhook
-
-    if (body.object === "page") {
-        // Returns a '200 OK' response to all requests
-        res.status(200).send("EVENT_RECEIVED");
-
-        // Determine which webhooks were triggered and get sender PSIDs and locale, message content and more.
-
-    } else {
-        // Return a '404 Not Found' if event is not from a page subscription
-        res.sendStatus(404);
+    if (!body || !body.object) {
+        return res.sendStatus(400); // Bad Request
     }
 
+    console.log(`\u{1F7EA} Received webhook:`);
+    console.dir(body, { depth: null });
+
+    if (body.object === "page") {
+        try {
+            if (body.entry && body.entry[0].messaging) {
+                body.entry[0].messaging.forEach((event) => {
+                    if (event.message) {
+                        handleIncomingMessage(event);
+                    }
+                    // Handle other event types if needed
+                });
+            }
+            res.status(200).send("EVENT_RECEIVED");
+        } catch (error) {
+            console.error('Error processing webhook:', error);
+            res.sendStatus(500); // Internal Server Error
+        }
+    } else {
+        res.sendStatus(404);
+    }
 }
+
+const handleIncomingMessage = (event) => {
+    const senderId = event.sender.id;
+    const messageText = event.message.text;
+    // Process the message, e.g., respond to the user
+    console.log(`Received message from ${senderId}: ${messageText}`);
+};
+
 
 export { getHomePage, getABC, postWebhook, getWebhook };
