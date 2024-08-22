@@ -8,10 +8,10 @@ const router = express.Router();
 
 
 
-// router.get('/', getHomePage);
+router.get('/', getHomePage);
 router.get('/abc', getABC);
 
-router.get('/webhook', getWebhook);
+router.get('//messaging-webhook', getWebhook);
 router.post('/webhook', postWebhook);
 
 // console.log(router);
