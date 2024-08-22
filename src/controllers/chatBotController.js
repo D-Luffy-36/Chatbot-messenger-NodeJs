@@ -1,4 +1,5 @@
 import dotenv from "dotenv"
+dotenv.config();
 
 const getHomePage = (req, res) => {
     // process data
