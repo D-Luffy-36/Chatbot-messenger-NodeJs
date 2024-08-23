@@ -1,16 +1,13 @@
-import express from 'express';
-import path from 'path';
+import express from "express";
 
-// đường dẫn tới file hiện tại
-// const __filename = fileURLToPath(import.meta.url);
-// đường dẫn thư mục src
-// const __dirname = path.join(__filename, '..', '..');
+/*
+Config view engine for node app
+ */
 
-const configViewEngine = (app) => {
-    app.set('views', path.join("./src", 'views'));
-    app.set('view engine', 'ejs');
-    app.use(express.static(path.join("./src", 'public')))
-    // console.log(path.join("./src", 'views'));
+let configViewEngine = (app) => {
+    app.use(express.static("./src/public"));
+    app.set("view engine", "ejs");
+    app.set("views","./src/views");
 };
 
-export default configViewEngine;
+module.exports = configViewEngine;

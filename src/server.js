@@ -1,23 +1,23 @@
-import express from "express"
-import dotenv from "dotenv"
-import configViewEngine from "./config/viewEngine.js";
-import router from "./routes/web.js";
+require("dotenv").config();
+import express from "express";
+import viewEngine from "./config/viewEngine";
+import initWebRoute from "./routes/web";
 import bodyParser from "body-parser";
 
-const app = express();
-dotenv.config();
+let app = express();
 
+// config view engine
+viewEngine(app);
 
-const port = process.env.PORT || 8888;
+//use body-parser to post data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// init all web routes
+initWebRoute(app);
 
-// config template
-configViewEngine(app);
-// khai báo route
-app.use('/', router);
+let port = process.env.PORT || 8080;
 
-app.listen(port, () => {
-    console.log(`Server Chatbot is running on port ${port}`);
+app.listen(port, ()=>{
+   console.log(`App is running at the port ${port}`) ;
 });
